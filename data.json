@@ -1,0 +1,215 @@
+{
+"results": [
+{
+  "mod": 1,
+  "name": "person1",
+  "gender": "Female",
+  "race": "African-American",
+  "age": "18-24"
+},
+  {
+    "mod": 1,
+    "name": "person2",
+    "gender": "Male",
+    "race": "Eastern Asian",
+    "age": "25-29"
+},
+  {
+    "mod": 1,
+    "name": "person3",
+    "gender": "Transgender Male",
+    "race": "Hispanic/Latina/o",
+    "age": "30-34"
+},
+  {
+    "mod": 1,
+    "name": "person4",
+    "gender": "Transgender Female",
+    "race": "Middle Eastern",
+    "age": "40-44"
+},
+  {
+    "mod": 1,
+    "name": "person5",
+    "gender": "Gender Variant/ Non-Conforming",
+    "race": "Native American/Alaskan Native",
+    "age": "45-49"
+},
+  {
+    "mod": 1,
+    "name": "person6",
+    "gender": "Prefer not to Answer",
+    "race": "Pacific Islander",
+    "age": "Over 50"
+},
+  {
+    "mod": 2,
+    "name": "person7",
+    "gender": "Other",
+    "race": "Southeast Asian",
+    "age": "Prefer not to Answer"
+},
+  {
+    "mod": 2,
+    "name": "person8",
+    "gender": "Female",
+    "race": "White",
+    "age": "25-29"
+},
+  {
+    "mod": 2,
+    "name": "person9",
+    "gender": "Male",
+    "race": "Other",
+    "age": "30-34"
+},
+  {
+    "mod": 2,
+    "name": "person10",
+    "gender": "Transgender Male",
+    "race": "African-American/Black",
+    "age": "35-39"
+},
+  {
+    "mod": 2,
+    "name": "person11",
+    "gender": "Transgender Female",
+    "race": "Eastern Asian",
+    "age": "40-44"
+},
+  {
+    "mod": 2,
+    "name": "person12",
+    "gender": "Gender Variant/ Non-Conforming",
+    "race": "Hispanic/Latina/o",
+    "age": "45-49"
+},
+  {
+    "mod": 2,
+    "name": "person13",
+    "gender": "Prefer not to Answer",
+    "race": "Middle Eastern",
+    "age": "Over 50"
+},
+  {
+    "mod": 3,
+    "name": "person14",
+    "gender": "Other",
+    "race": "Native American/Alaskan Native",
+    "age": "Prefer not to Answer"
+},
+  {
+    "mod": 3,
+    "name": "person15",
+    "gender": "Female",
+    "race": "Pacific Islander",
+    "age": "18-24"
+},
+  {
+    "mod": 3,
+    "name": "person16",
+    "gender": "Male",
+    "race": "South Asian",
+    "age": "25-29"
+},
+  {
+    "mod": 3,
+    "name": "person17",
+    "gender": "Transgender Male",
+    "race": "Southeast Asian",
+    "age": "30-34"
+},
+  {
+    "mod": 3,
+    "name": "person18",
+    "gender": "Transgender Female",
+    "race": "White",
+    "age": "35-39"
+},
+  {
+    "mod": 3,
+    "name": "person19",
+    "gender": "Gender Variant/ Non-Conforming",
+    "race": "Other",
+    "age": "40-44"
+},
+  {
+    "mod": 3,
+    "name": "person20",
+    "gender": "Prefer not to Answer",
+    "race": "African-American/Black",
+    "age": "45-49"
+},
+  {
+    "mod": 4,
+    "name": "person21",
+    "gender": "Other",
+    "race": "Eastern Asian",
+    "age": "Over 50"
+},
+  {
+    "mod": 4,
+    "name": "person22",
+    "gender": "Female",
+    "race": "Hispanic/Latina/o",
+    "age": "Prefer not to Answer"
+},
+  {
+    "mod": 4,
+    "name": "person23",
+    "gender": "Male",
+    "race": "Middle Eastern",
+    "age": "18-24"
+},
+  {
+    "mod": 4,
+    "name": "person24",
+    "gender": "Transgender Male",
+    "race": "Native American/Alaskan Native",
+    "age": "25-29"
+},
+  {
+    "mod": 4,
+    "name": "person25",
+    "gender": "Transgender Female",
+    "race": "Pacific Islander",
+    "age": "30-34"
+},
+  {
+    "mod": 4,
+    "name": "person26",
+    "gender": "Gender Variant/ Non-Conforming",
+    "race": "South Asian",
+    "age": "35-39"
+},
+  {
+    "mod": 4,
+    "name": "person27",
+    "gender": "Prefer not to Answer",
+    "race": "Southeast Asian",
+    "age": "40-44"
+},
+  {
+    "mod": 4,
+    "name": "person28",
+    "gender": "Other",
+    "race": "White",
+    "age": "45-49"
+},
+  {
+    "mod": 4,
+    "name": "person29",
+    "gender": "Female",
+    "race": "Other",
+    "age": "Over 50"
+},
+  {
+    "mod": 4,
+    "name": "person30",
+    "gender": "Male",
+    "race": "African-American/Black",
+    "age": "Prefer not to Answer"
+}
+
+  ]
+}
