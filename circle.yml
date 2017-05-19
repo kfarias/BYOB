@@ -2,12 +2,14 @@ machine:
   timezone:
     America/Denver
   node:
-    version: 7.10.0
+    version:
+       7.10.0
 
 environment:
   DATABASE_URL: postgresql://ubuntu:@127.0.0.1:5432/circle_test
 
-production:
-  branch: master
-  heroku:
-    appname: diversity-tracker
+deployment:
+  production:
+    branch: master
+    heroku:
+      appname: diversity-tracker
