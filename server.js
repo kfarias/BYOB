@@ -1,55 +1,58 @@
 const express = require('express');
 
+const cors = require('cors');
+
 const app = express();
 
 const bodyParser = require('body-parser');
 
 const jwt = require('jsonwebtoken');
 
-// const config = require('dotenv').config().parsed;
+const config = require('dotenv').config().parsed;
 
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.locals.title = 'Diversity Tracker';
 app.use(express.static('public'));
 
-// app.set('secretKey', config.CLIENT_SECRET);
 app.set('port', process.env.PORT || 3000);
-app.locals.title = 'Diversity Tracker';
+app.set('secretKey', config.CLIENT_SECRET);
 
-// if (!config.CLIENT_SECRET || !config.USERNAME || !config.PASSWORD) {
-//   throw 'Make sure you have a CLIENT_SECRET, USERNAME, and PASSWORD in your .env file'
-// }
-//
-// const checkAuth = (request, response, next) => {
-//   const token = request.body.token ||
-//                 request.params.token ||
-//                 request.headers['authorization'];
-//
-//   if (token) {
-//     jwt.verify(token, app.get('secretKey'), (error, decoded) => {
-//       if (error) {
-//         return response.status(403).send({
-//           success: false,
-//           message: 'Invalid authorization token.'
-//         });
-//       } else {
-//         request.decoded = decoded;
-//         next();
-//       }
-//     });
-//   } else {
-//     return response.status(403).send({
-//       success: false,
-//       message: 'You must be authorized to hit this endpoint'
-//     });
-//   }
-// };
+if (!config.CLIENT_SECRET || !config.USERNAME || !config.PASSWORD) {
+  throw 'Make sure you have a CLIENT_SECRET, USERNAME, and PASSWORD in your .env file';
+}
+const token = jwt.sign('user', app.get('secretKey'));
+console.log(token);
 
+
+const checkAuth = (request, response, next) => {
+  const token = request.body.token ||
+  request.params.token ||
+  request.headers.authorization;
+  if (token) {
+    jwt.verify(token, app.get('secretKey'), (error, decoded) => {
+      if (error) {
+        return response.status(403).send({
+          success: false,
+          message: 'You are not Authorized to Change things!',
+        });
+      } else {
+        request.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    return response.status(403).send({
+      success: false,
+      message: 'You are not authorized to hit this end point',
+    });
+  }
+};
 
 // GET
 app.get('/api/v1/mods', (request, response) => {
@@ -80,12 +83,23 @@ app.get('/api/v1/people/:id', (request, response) => {
     response.status(200).json(people);
   })
   .catch((error) => {
-    console.error('error: ', error);
+    response.status(404).send('resource not found')
+  });
+});
+
+app.get('/api/v1/mods/:id', (request, response) => {
+  database('mods').where('id', request.params.id).select()
+  .then((mods) => {
+    console.log(mods);
+    response.status(200).json(mods);
+  })
+  .catch((error) => {
+    response.status(404).send('resource not found')
   });
 });
 
 // POST
-app.post('/api/v1/mods', (request, response) => {
+app.post('/api/v1/mods', checkAuth, (request, response) => {
   const mod = request.body;
   const name = request.body.name;
 
@@ -107,7 +121,7 @@ app.post('/api/v1/mods', (request, response) => {
   }
 });
 
-app.post('/api/v1/mods/:mods_id/people', (request, response) => {
+app.post('/api/v1/mods/:mods_id/people', checkAuth, (request, response) => {
   const peopleObj = {
     genders: request.body.genders,
     races: request.body.races,
@@ -134,6 +148,74 @@ app.post('/api/v1/mods/:mods_id/people', (request, response) => {
         });
     });
   }
+});
+
+
+// PATCH
+app.patch('/api/v1/mods/:id/edit', checkAuth, (request, response) => {
+  const { mods, id } = request.body;
+  database('mods').where('id', request.params.id)
+  .update({
+    name: request.body.name,
+  })
+    .then(() => {
+      database('mods').select()
+      .then((mods) => {
+        response.status(200).json(mods);
+      });
+    })
+    .catch(error => console.log(error));
+});
+
+// PUT
+app.put('/api/v1/people/:id/override', checkAuth, (request, response) => {
+  database('people').where('id', request.params.id)
+  .update({
+    id: request.body.people.id,
+    genders: request.body.genders,
+    races: request.body.races,
+    ages: request.body.ages,
+    mods_id: request.body.mods_id,
+  })
+  .then(() => {
+    database('people').select()
+    .then((people) => {
+      response.status(200).json(people);
+    });
+  });
+});
+
+// DELETE
+app.delete('/api/v1/mods/:id', checkAuth, (request, response) => {
+  const { id } = request.params;
+  database('mods').where('id', id).del()
+  .then(() => {
+    database('mods').select()
+    .then((mods) => {
+      response.status(204).json(mods);
+    })
+    .catch((error) => {
+      response.status(404).send('resource not found')
+    });
+  });
+});
+
+app.delete('/api/v1/people/:id', checkAuth, (request, response) => {
+  const { id } = request.params;
+
+  database('people').where('mods_id', id).update({ mods_id: null })
+  .then(() => {
+    database('people').where('id', id).del()
+    .then(() => {
+      database('people').select()
+      .then((people) => {
+        response.status(204).json(people);
+      })
+      .catch((error) => {
+        response.status(404).send('resource not found')
+      });
+    });
+  });
 });
 
 

@@ -1,15 +1,15 @@
 
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('peopleInfo'),
     knex.schema.dropTable('allPeople'),
 
-    knex.schema.createTable('mods', function(table) {
+    knex.schema.createTable('mods', function (table) {
       table.increments('id').primary();
       table.string('name');
       table.timestamps(true, true);
     }),
-    knex.schema.createTable('people', function(table) {
+    knex.schema.createTable('people', function (table) {
       table.increments('id').primary();
       table.string('genders');
       table.string('races');
@@ -19,10 +19,10 @@ exports.up = function(knex, Promise) {
         .references('mods.id');
       table.timestamps(true, true);
     })
-  ])
+  ]);
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
   return Promise.all([
     knex.schema.createTable('peopleInfo', function (table) {
       table.increments('id').primary();
@@ -43,5 +43,5 @@ exports.down = function(knex, Promise) {
     }),
     knex.shema.dropTable('mods'),
     knex.shema.dropTable('people')
-  ])
+  ]);
 };
