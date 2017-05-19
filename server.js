@@ -24,9 +24,6 @@ app.set('secretKey', process.env.CLIENT_SECRET || config.CLIENT_SECRET);
 const token = jwt.sign('user', app.get('secretKey'));
 app.set('port', process.env.PORT || 3000);
 
-console.log(token);
-
-
 const checkAuth = (request, response, next) => {
   const token = request.body.token ||
   request.params.token ||
