@@ -4,17 +4,52 @@ const app = express();
 
 const bodyParser = require('body-parser');
 
+const jwt = require('jsonwebtoken');
+
+// const config = require('dotenv').config().parsed;
+
+
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+// app.set('secretKey', config.CLIENT_SECRET);
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Diversity Tracker';
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// if (!config.CLIENT_SECRET || !config.USERNAME || !config.PASSWORD) {
+//   throw 'Make sure you have a CLIENT_SECRET, USERNAME, and PASSWORD in your .env file'
+// }
+//
+// const checkAuth = (request, response, next) => {
+//   const token = request.body.token ||
+//                 request.params.token ||
+//                 request.headers['authorization'];
+//
+//   if (token) {
+//     jwt.verify(token, app.get('secretKey'), (error, decoded) => {
+//       if (error) {
+//         return response.status(403).send({
+//           success: false,
+//           message: 'Invalid authorization token.'
+//         });
+//       } else {
+//         request.decoded = decoded;
+//         next();
+//       }
+//     });
+//   } else {
+//     return response.status(403).send({
+//       success: false,
+//       message: 'You must be authorized to hit this endpoint'
+//     });
+//   }
+// };
 
-app.use(express.static('public'));
 
 // GET
 app.get('/api/v1/mods', (request, response) => {
@@ -23,86 +58,88 @@ app.get('/api/v1/mods', (request, response) => {
   .catch(error => console.error('error: ', error));
 });
 
-// app.get('/api/v1/query', (request, response) => {
-//   database('query').select()
-//   .then(query => response.status(200).json(query))
-//   .catch(error => console.error('error: ', error));
-// });
-//
-// app.get('/api/v1/quizzes/:quiz_id/query', (request, response) => {
-//   database('query').where('quiz_id', request.params.quiz_id).select()
-//     .then((query) => {
-//       response.status(200).json(query);
-//     })
-//     .catch((error) => {
-//       console.error('error: ', error);
-//     });
-// });
-//
-// app.get('/api/v1/query/:id', (request, response) => {
-//   database('query').where('id', request.params.id).select()
-//   .then((query) => {
-//     response.status(200).json(query);
-//   })
-//   .catch((error) => {
-//     console.error('error: ', error);
-//   });
-// });
+app.get('/api/v1/people', (request, response) => {
+  database('people').select()
+  .then(people => response.status(200).json(people))
+  .catch(error => console.error('error: ', error));
+});
 
-// // POST
-// app.post('/api/v1/quizzes', (request, response) => {
-//   const quiz = request.body;
-//   const title = request.body.title;
-//
-//   if (!title) {
-//     response.status(422).send({
-//       error: 'You are missing a title!',
-//     });
-//   } else {
-//     database('quizzes').insert(quiz, 'id')
-//     .then((quizObj) => {
-//       response.status(201).json({
-//         id: quizObj[0],
-//         title,
-//       });
-//     })
-//     .catch((error) => {
-//       console.error('error: ', error);
-//     });
-//   }
-// });
-//
-// app.post('/api/v1/quizzes/:quiz_id/query', (request, response) => {
-//   const queryObj = {
-//     question: request.body.question,
-//     answer: request.body.answer,
-//     quiz_id: request.params.quiz_id,
-//   };
-//   if (!queryObj.question) {
-//     response.status(422).send({
-//       error: 'How can we ask a question without a question? (Direct quote from Socrates)',
-//     });
-//   } else if (!queryObj.answer) {
-//     response.status(422).send({
-//       error: 'Not much of a quiz without an answer - please resubmit.',
-//     });
-//   } else {
-//     database('query').insert(queryObj)
-//     .then(() => {
-//       database('query').where('quiz_id', request.params.quiz_id).select()
-//         .then((question) => {
-//           response.status(201).json(question);
-//         })
-//         .catch((error) => {
-//           console.error('error: ', error);
-//         });
-//     });
-//   }
-// });
-//
-// if (!module.parent) {
-//   app.listen(app.get('port'), () => {
-//   });
-// }
+app.get('/api/v1/mods/:mods_id/people', (request, response) => {
+  database('people').where('mods_id', request.params.mods_id).select()
+    .then((people) => {
+      response.status(200).json(people);
+    })
+    .catch((error) => {
+      console.error('error: ', error);
+    });
+});
+
+app.get('/api/v1/people/:id', (request, response) => {
+  database('people').where('id', request.params.id).select()
+  .then((people) => {
+    response.status(200).json(people);
+  })
+  .catch((error) => {
+    console.error('error: ', error);
+  });
+});
+
+// POST
+app.post('/api/v1/mods', (request, response) => {
+  const mod = request.body;
+  const name = request.body.name;
+
+  if (!name) {
+    response.status(422).send({
+      error: 'You are missing a mod name!',
+    });
+  } else {
+    database('mods').insert(mod, 'id')
+    .then((modObj) => {
+      response.status(201).json({
+        id: modObj[0],
+        name,
+      });
+    })
+    .catch((error) => {
+      console.error('error: ', error);
+    });
+  }
+});
+
+app.post('/api/v1/mods/:mods_id/people', (request, response) => {
+  const peopleObj = {
+    genders: request.body.genders,
+    races: request.body.races,
+    ages: request.body.ages,
+    mods_id: request.params.mods_id,
+  };
+  if (!peopleObj.ages) {
+    response.status(422).send({
+      error: 'Please enter an age so we can be more accurate!',
+    });
+  } else if (!peopleObj.genders) {
+    response.status(422).send({
+      error: 'Please enter and answer for the gender section so we can be more accurate!',
+    });
+  } else {
+    database('people').insert(peopleObj)
+    .then(() => {
+      database('people').where('mods_id', request.params.mods_id).select()
+        .then((people) => {
+          response.status(201).json(people);
+        })
+        .catch((error) => {
+          console.error('error: ', error);
+        });
+    });
+  }
+});
+
+
+app.listen(app.get('port'), () => {
+  console.log(`port is running on ${app.get('port')}.`);
+});
+
 
 module.exports = app;
