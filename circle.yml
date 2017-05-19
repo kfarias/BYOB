@@ -10,4 +10,4 @@ machine:
 production:
   branch: master
   heroku:
-    appname: diversity_tracker
+    appname: diversity-tracker
