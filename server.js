@@ -1,14 +1,9 @@
 const express = require('express');
-
 const cors = require('cors');
-
-const app = express();
-
 const bodyParser = require('body-parser');
-
 const jwt = require('jsonwebtoken');
-
 const config = require('dotenv').config().parsed;
+const app = express();
 
 
 const environment = process.env.NODE_ENV || 'development';
@@ -43,7 +38,7 @@ const checkAuth = (request, response, next) => {
   } else {
     return response.status(403).send({
       success: false,
-      message: 'You are not authorized to hit this end point',
+      message: 'Hey, we got your token, but it doesnt work.',
     });
   }
 };
@@ -52,7 +47,9 @@ const checkAuth = (request, response, next) => {
 app.get('/api/v1/mods', (request, response) => {
   database('mods').select()
   .then(mods => response.status(200).json(mods))
-  .catch(error => console.error('error: ', error));
+  .catch(() => {
+    response.status(500).send('no mods found');
+  });
 });
 
 app.get('/api/v1/people', (request, response) => {
@@ -66,8 +63,8 @@ app.get('/api/v1/mods/:mods_id/people', (request, response) => {
     .then((people) => {
       response.status(200).json(people);
     })
-    .catch((error) => {
-      console.error('error: ', error);
+    .catch(() => {
+      response.status(404).send('no people found for this mod');
     });
 });
 
@@ -84,7 +81,6 @@ app.get('/api/v1/people/:id', (request, response) => {
 app.get('/api/v1/mods/:id', (request, response) => {
   database('mods').where('id', request.params.id).select()
   .then((mods) => {
-    console.log(mods);
     response.status(200).json(mods);
   })
   .catch((error) => {
@@ -203,7 +199,7 @@ app.delete('/api/v1/people/:id', checkAuth, (request, response) => {
     .then(() => {
       database('people').select()
       .then((people) => {
-        response.status(204).json(people);
+        response.status(200).json(people);
       })
       .catch((error) => {
         response.status(404).send('resource not found')

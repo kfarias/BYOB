@@ -49,6 +49,23 @@ describe('Diversity Tracker server testing', () => {
       });
     });
 
+    describe('API routes', () => {
+      describe('GET /api/v1/mods', () => {
+        it('should return all mod1 people', (done) => {
+          chai.request(server)
+          .get('/api/v1/mods/1/people')
+          .end((error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('array');
+            response.body.should.have.length(4);
+            response.body[0].should.have.property('name');
+            done();
+          });
+        });
+      });
+    });//maybe not
+
     describe('GET /api/v1/people', () => {
       it('should return all people', (done) => {
         chai.request(server)
@@ -65,6 +82,7 @@ describe('Diversity Tracker server testing', () => {
         });
       });
     });
+  });//figire out brackets
 
     describe('GET /api/v1/mods/:mods_id', () => {
       it('should return one mods with an id', (done) => {
@@ -81,10 +99,11 @@ describe('Diversity Tracker server testing', () => {
     });
 
     describe('GET /api/v1/people/:id', () => {
-      it.skip('should return one person with an id', (done) => {
+      it('should return one person with an id', (done) => {
         chai.request(server)
-        .get('/api/v1/people/122')
+        .get('/api/v1/people')
         .end((error, response) => {
+          console.log(response.body);
           response.should.be.json;
           response.body.should.be.a('array');
           response.body.should.have.length(1);
@@ -168,8 +187,6 @@ describe('Diversity Tracker server testing', () => {
         chai.request(server)
         .get('/api/v1/people/122')
         .end((error, response) => {
-          console.log(response.body);
-          response.body[0].should.have.property('gender');
           response.body[0].gender.should.equal('Female');
           chai.request(server)
           .put('api/v1/people/122/override')
@@ -194,7 +211,6 @@ describe('Diversity Tracker server testing', () => {
         chai.request(server)
         .get('/api/v1/mods')
         .end((error, response) => {
-          console.log(response.body);
           response.body.length.should.equal(4);
           chai.request(server)
           .delete('api/v1/mods/2')
@@ -211,5 +227,7 @@ describe('Diversity Tracker server testing', () => {
         });
       });
     });
+
+
   });
 });
