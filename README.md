@@ -1,6 +1,6 @@
 # BYOB/Diversity Tracker
 
-##[Heroku](https://diversity-tracker.herokuapp.com/)
+## [Heroku](https://diversity-tracker.herokuapp.com/)
 
 ## Endpoints
 
